@@ -1,10 +1,10 @@
 package com.example.enbdassignment.ui.activity
 
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import com.example.enbdassignment.R
-import dagger.android.DaggerActivity
 
-class MainActivity : DaggerActivity() {
+class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -1,6 +1,7 @@
 package com.example.enbdassignment.di.component
 
 import android.app.Application
+import com.example.enbdassignment.di.modules.*
 import com.example.enbdassignment.ui.MyENBDApplication
 import dagger.BindsInstance
 import dagger.Component
@@ -12,7 +13,12 @@ import javax.inject.Singleton
 @Singleton
 @Component(
     modules = [
-        AndroidSupportInjectionModule::class
+        AndroidSupportInjectionModule::class,
+        FragmentModule::class,
+        ViewModelModule::class,
+        RetrofitModule::class,
+        ContextModule::class,
+        DbModule::class
     ]
 )
 interface ApplicationComponent : AndroidInjector<DaggerApplication> {
