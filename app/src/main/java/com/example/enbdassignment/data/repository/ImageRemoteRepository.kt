@@ -9,6 +9,6 @@ import javax.inject.Inject
 class ImageRemoteRepository @Inject constructor(private val pixabayApi: PixabayApi) {
 
     fun search(word: String, pageNumber: Int): Single<PixabyImageReponse> {
-        return pixabayApi.searchImage(Constants.API_KEY, word, Constants.IMAGE_TYPE, pageNumber)
+        return pixabayApi.searchImage(word, Constants.IMAGE_TYPE, pageNumber)
     }
 }

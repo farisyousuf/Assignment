@@ -12,7 +12,6 @@ import retrofit2.http.Query
 interface PixabayApi {
     @GET("/api/")
     fun searchImage(
-        @Query(KEY) key: String,
         @Query(QUERY) query: String,
         @Query(IMAGE_TYPE) type: String,
         @Query(PAGE) pageNumber: Int
