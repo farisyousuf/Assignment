@@ -13,10 +13,18 @@ object BindingAdapters {
      */
 
     @JvmStatic
-    @BindingAdapter("imgUrl", "errorPlaceHolderDrawable", requireAll = false)
-    fun loadImageStringURL(view: ImageView, url: String?, drawable: Drawable?) {
+    @BindingAdapter("imgUrl", "thumbnailUrl", "errorPlaceHolderDrawable", requireAll = false)
+    fun loadImageStringURL(
+        view: ImageView,
+        url: String?,
+        thumbnailUrl: String?,
+        drawable: Drawable?
+    ) {
         url?.takeIf { it.isNotEmpty() }.let { imgUrl ->
             val load = GlideApp.with(view).load(imgUrl)
+            thumbnailUrl?.let {
+                load.thumbnail(GlideApp.with(view).load(url))
+            }
             drawable?.let {
                 load.error(it)
             }

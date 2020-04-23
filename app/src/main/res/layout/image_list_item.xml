@@ -28,6 +28,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:imgUrl="@{model.previewURL}"
+            app:thumbnailUrl="@{model.webformatURL}"
             app:errorPlaceHolderDrawable="@{@drawable/empty_image}"
             tools:ignore="ContentDescription" />
 

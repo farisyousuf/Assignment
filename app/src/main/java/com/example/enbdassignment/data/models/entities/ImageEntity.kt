@@ -12,6 +12,7 @@ data class ImageEntity(
     val id: Int,
     val comments: Int? = null,
     val previewURL: String? = null,
+    val webformatURL: String? = null,
     val largeImageURL: String? = null,
     val likes: Int? = null,
     val tags: String? = null,
