@@ -26,6 +26,7 @@ class SearchImageListViewModel @Inject constructor(private val imageRepository: 
     var lastSearchedWord: String? = null
     var searchString = MutableLiveData<String>()
     var searchFailEvent = SingleLiveEvent<Void>()
+    var onItemClickEvent = SingleLiveEvent<ImageEntity>()
     var searchSubject: BehaviorSubject<String> = BehaviorSubject.create<String>()
     var items = ObservableArrayList<ImageEntity>()
     val itemBinding: ItemBinding<ImageEntity> =
@@ -34,7 +35,9 @@ class SearchImageListViewModel @Inject constructor(private val imageRepository: 
             R.layout.image_list_item
         ).bindExtra(BR.listener, object : OnItemClickListener {
             override fun onItemClicked(imageEntity: ImageEntity?) {
-
+                imageEntity?.let {
+                    onItemClickEvent.value = imageEntity
+                }
             }
         })
 

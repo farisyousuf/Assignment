@@ -3,6 +3,7 @@ package com.example.enbdassignment.ui.fragment.search
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.enbdassignment.BR
 import com.example.enbdassignment.R
@@ -76,6 +77,10 @@ class SearchImageListFragment :
                 DialogFactory.showErrorDialog(context, getString(R.string.no_content_found))
             }
         })
+
+        viewModel.onItemClickEvent.observe(this, Observer {
+            findNavController().navigate(SearchImageListFragmentDirections.actionSearchImageListFragmentToImageDetailFragment(it))
+        })
     }
 
     override fun onDestroy() {
@@ -83,6 +88,7 @@ class SearchImageListFragment :
         compositeDisposable.clear()
         viewModel.searchString.removeObservers(this)
         viewModel.searchFailEvent.removeObservers(this)
+        viewModel.onItemClickEvent.removeObservers(this)
     }
 
     companion object {

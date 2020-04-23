@@ -7,5 +7,17 @@
     <fragment
         android:id="@+id/searchImageListFragment"
         android:name="com.example.enbdassignment.ui.fragment.search.SearchImageListFragment"
-        android:label="SearchImageListFragment" />
+        android:label="SearchImageListFragment">
+        <action
+            android:id="@+id/action_searchImageListFragment_to_imageDetailFragment"
+            app:destination="@id/imageDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/imageDetailFragment"
+        android:name="com.example.enbdassignment.ui.fragment.detail.ImageDetailFragment"
+        android:label="ImageDetailFragment">
+        <argument
+            android:name="imageData"
+            app:argType="com.example.enbdassignment.data.models.entities.ImageEntity" />
+    </fragment>
 </navigation>

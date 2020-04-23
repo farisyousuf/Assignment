@@ -27,8 +27,8 @@
             android:src="@color/colorPrimaryDark"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:imgUrl="@{model.previewURL}"
-            app:thumbnailUrl="@{model.webformatURL}"
+            app:imgUrl="@{model.webformatURL}"
+            app:thumbnailUrl="@{model.previewURL}"
             app:errorPlaceHolderDrawable="@{@drawable/empty_image}"
             tools:ignore="ContentDescription" />
 

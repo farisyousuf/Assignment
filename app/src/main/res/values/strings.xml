@@ -4,4 +4,6 @@
     <string name="search_hint">Search Fruit</string>
     <string name="error_title">Error</string>
     <string name="ok">OK</string>
+    <string name="likes_title">Likes:</string>
+    <string name="comments_title">Comments:</string>
 </resources>

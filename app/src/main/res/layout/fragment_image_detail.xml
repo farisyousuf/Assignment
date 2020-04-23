@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.example.enbdassignment.ui.fragment.detail.ImageDetailViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/empty_image"
+            app:errorPlaceHolderDrawable="@{@drawable/empty_image}"
+            app:imgUrl="@{viewModel.imageEntity.largeImageURL}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:thumbnailUrl="@{viewModel.imageEntity.previewURL}"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/likeTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dimen_8dp"
+            android:text="@string/likes_title"
+            android:textColor="@android:color/black"
+            app:layout_constraintBottom_toTopOf="@id/commentsTitle"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="Likes:" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dimen_8dp"
+            android:text="@{viewModel.imageEntity.likes.toString()}"
+            android:textColor="@android:color/black"
+            app:layout_constraintBottom_toTopOf="@id/commentsTitle"
+            app:layout_constraintStart_toEndOf="@id/likeTitle"
+            tools:text="10" />
+
+        <TextView
+            android:id="@+id/commentsTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dimen_8dp"
+            android:text="@string/comments_title"
+            android:textColor="@android:color/black"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dimen_8dp"
+            android:text="@{viewModel.imageEntity.comments.toString()}"
+            android:textColor="@android:color/black"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/commentsTitle"
+            tools:text="10" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
