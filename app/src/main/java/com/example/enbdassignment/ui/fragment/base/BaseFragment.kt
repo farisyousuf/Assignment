@@ -6,12 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
-import androidx.lifecycle.ViewModel
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import dagger.android.support.DaggerFragment
+import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 
-abstract class BaseFragment<VB : ViewDataBinding, VM : ViewModel> : DaggerFragment() {
+abstract class BaseFragment<VB : ViewDataBinding, VM : BaseViewModel> : Fragment() {
 
     abstract fun provideViewModelClass(): Class<VM>
     abstract fun layoutId(): Int
@@ -26,6 +26,7 @@ abstract class BaseFragment<VB : ViewDataBinding, VM : ViewModel> : DaggerFragme
     protected var isUseCustomViewModelFactory: Boolean = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        AndroidSupportInjection.inject(this)
         super.onCreate(savedInstanceState)
         viewModel = if (isUseCustomViewModelFactory)
             ViewModelProvider(this, viewModelFactory).get(provideViewModelClass())

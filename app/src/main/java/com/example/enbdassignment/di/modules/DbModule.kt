@@ -18,8 +18,7 @@ class DbModule {
     internal fun provideAppDatabase(context: Context, @Named("dbName") dbName: String): AppDb {
         return Room.databaseBuilder(
             context, AppDb::class.java, dbName
-        ).allowMainThreadQueries()
-            // Clear DB while upgrade or downgrade
+        ) // Clear DB while upgrade or downgrade
             .fallbackToDestructiveMigration()
             .build()
     }
