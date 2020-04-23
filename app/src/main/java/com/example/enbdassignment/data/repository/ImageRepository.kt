@@ -19,6 +19,7 @@ constructor(
                 imageList.hits.onEach {
                     it.searchWord = query
                 }
+                cacheRepository.insertAll(imageList.hits)
                 ResultState.Success(imageList) as ResultState<PixabyImageReponse>
             }.onErrorReturn {
                 ResultState.Error("No Data Found")
@@ -27,9 +28,5 @@ constructor(
 
     fun getImagesFromCache(query: String): List<ImageEntity> {
         return cacheRepository.search(query)
-    }
-
-    fun storeImageListCache(imageList: List<ImageEntity>) {
-        cacheRepository.insertAll(imageList)
     }
 }

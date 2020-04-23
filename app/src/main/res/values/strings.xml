@@ -2,4 +2,6 @@
     <string name="app_name">ENBDAssignment</string>
     <string name="no_content_found">No content found</string>
     <string name="search_hint">Search Fruit</string>
+    <string name="error_title">Error</string>
+    <string name="ok">OK</string>
 </resources>

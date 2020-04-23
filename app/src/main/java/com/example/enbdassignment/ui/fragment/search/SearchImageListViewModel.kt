@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.enbdassignment.BR
 import com.example.enbdassignment.R
+import com.example.enbdassignment.architecture.SingleLiveEvent
 import com.example.enbdassignment.data.models.common.ResultState
 import com.example.enbdassignment.data.models.entities.ImageEntity
 import com.example.enbdassignment.data.repository.ImageRepository
@@ -15,7 +16,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import me.tatarka.bindingcollectionadapter2.ItemBinding
-import timber.log.Timber
 import javax.inject.Inject
 
 class SearchImageListViewModel @Inject constructor(private val imageRepository: ImageRepository) :
@@ -25,6 +25,7 @@ class SearchImageListViewModel @Inject constructor(private val imageRepository: 
     private var pageNumber = 1
     var lastSearchedWord: String? = null
     var searchString = MutableLiveData<String>()
+    var searchFailEvent = SingleLiveEvent<Void>()
     var searchSubject: BehaviorSubject<String> = BehaviorSubject.create<String>()
     var items = ObservableArrayList<ImageEntity>()
     val itemBinding: ItemBinding<ImageEntity> =
@@ -41,36 +42,61 @@ class SearchImageListViewModel @Inject constructor(private val imageRepository: 
         searchString.value = DEFAULT_SEARCH_QUERY
     }
 
-    fun search(query: String) {
-        if (requestInProgress || allHitsLoaded)
-            return
-        imageRepository.searchImage(query, pageNumber).toFlowable().subscribe { result ->
+    fun search(query: String, isReload: Boolean = false) {
+        updatePageNumber(query, isReload)
+        imageRepository.searchImage(query, pageNumber).toFlowable().doOnSubscribe {
+            requestInProgress = true
+            allHitsLoaded = false
+        }.doFinally {
+            requestInProgress = false
+        }.subscribe { result ->
             when (result) {
                 is ResultState.Success -> {
-                    items.addAll(result.data.hits)
+                    setItems(result.data.hits)
                     allHitsLoaded = items.size == result.data.totalHits
-                    viewModelScope.launch(Dispatchers.IO) {
-                        imageRepository.storeImageListCache(result.data.hits)
-                    }
                 }
                 is ResultState.Error -> {
-                    lastSearchedWord = null
-                    try {
-                        viewModelScope.launch(Dispatchers.Main) {
-                            val imageList = withContext(Dispatchers.IO) {
-                                imageRepository.getImagesFromCache(
-                                    query
-                                )
-                            }
-                            items.addAll(imageList)
-                        }
-                    } catch (e: Exception) {
-                        Timber.e(e)
+                    when (pageNumber) {
+                        1 -> loadFromCache(query)
+                        else -> pageNumber--
                     }
                 }
             }
-            requestInProgress = false
         }.track()
+    }
+
+    private fun loadFromCache(query: String) {
+        try {
+            viewModelScope.launch(Dispatchers.Main) {
+                val imageList = withContext(Dispatchers.IO) {
+                    imageRepository.getImagesFromCache(
+                        query
+                    )
+                }
+                items.clear()
+                imageList.takeIf { it.isNotEmpty() }?.let {
+                    setItems(it)
+                    allHitsLoaded = true
+                } ?: searchFailEvent.call()
+            }
+        } catch (e: Exception) {
+            searchFailEvent.call()
+        }
+    }
+
+    private fun setItems(hits: List<ImageEntity>) {
+        if (pageNumber == 1)
+            items.clear()
+        items.addAll(hits)
+    }
+
+    private fun updatePageNumber(query: String, isReload: Boolean) {
+        if (lastSearchedWord == query && !isReload) {
+            pageNumber++
+        } else {
+            pageNumber = 1
+        }
+        lastSearchedWord = query
     }
 
     companion object {

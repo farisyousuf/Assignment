@@ -9,10 +9,10 @@ import com.example.enbdassignment.R
 import com.example.enbdassignment.databinding.FragmentSearchImageListBinding
 import com.example.enbdassignment.ui.fragment.base.BaseFragment
 import com.example.enbdassignment.ui.listener.PaginationScrollListener
+import com.example.enbdassignment.util.DialogFactory
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_search_image_list.*
-import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
 class SearchImageListFragment :
@@ -38,8 +38,8 @@ class SearchImageListFragment :
                 .debounce(SEARCH_DELAY, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { query ->
-                    if (query.isNotEmpty()) {
-                        viewModel.search(query)
+                    if (query.length >= MIN_LENGTH) {
+                        viewModel.search(query, true)
                     }
                 })
         subscribeToLiveData()
@@ -66,16 +66,27 @@ class SearchImageListFragment :
 
     private fun subscribeToLiveData() {
         viewModel.searchString.observe(this, Observer {
-            viewModel.searchSubject.onNext(it)
+            it?.let {
+                viewModel.searchSubject.onNext(it)
+            }
+        })
+
+        viewModel.searchFailEvent.observe(this, Observer {
+            context?.let { context ->
+                DialogFactory.showErrorDialog(context, getString(R.string.no_content_found))
+            }
         })
     }
 
     override fun onDestroy() {
         super.onDestroy()
         compositeDisposable.clear()
+        viewModel.searchString.removeObservers(this)
+        viewModel.searchFailEvent.removeObservers(this)
     }
 
     companion object {
         private const val SEARCH_DELAY: Long = 600
+        private const val MIN_LENGTH = 3
     }
 }
