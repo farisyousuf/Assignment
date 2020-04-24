@@ -35,22 +35,28 @@
                 tools:text="Apple" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipeToRefresh"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:paddingVertical="@dimen/dimen_10dp"
-            android:scrollbars="vertical"
-            app:itemBinding="@{viewModel.itemBinding}"
-            app:items="@{viewModel.items}"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/searchInputLayout"
-            tools:listitem="@layout/image_list_item"
-            tools:itemCount="3"
-            tools:ignore="UnusedAttribute" />
+            app:layout_constraintTop_toBottomOf="@+id/searchInputLayout">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:paddingVertical="@dimen/dimen_10dp"
+                android:scrollbars="vertical"
+                app:itemBinding="@{viewModel.itemBinding}"
+                app:items="@{viewModel.items}"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:ignore="UnusedAttribute"
+                tools:itemCount="3"
+                tools:listitem="@layout/image_list_item" />
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

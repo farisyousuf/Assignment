@@ -26,6 +26,7 @@ class SearchImageListViewModel @Inject constructor(private val imageRepository: 
     var lastSearchedWord: String? = null
     var searchString = MutableLiveData<String>()
     var searchFailEvent = SingleLiveEvent<Void>()
+    var searchSuccessEvent = SingleLiveEvent<List<ImageEntity>>()
     var onItemClickEvent = SingleLiveEvent<ImageEntity>()
     var searchSubject: BehaviorSubject<String> = BehaviorSubject.create<String>()
     var items = ObservableArrayList<ImageEntity>()
@@ -55,8 +56,8 @@ class SearchImageListViewModel @Inject constructor(private val imageRepository: 
         }.subscribe { result ->
             when (result) {
                 is ResultState.Success -> {
-                    setItems(result.data.hits)
                     allHitsLoaded = items.size == result.data.totalHits
+                    searchSuccessEvent.value = result.data.hits
                 }
                 is ResultState.Error -> {
                     when (pageNumber) {
@@ -78,8 +79,8 @@ class SearchImageListViewModel @Inject constructor(private val imageRepository: 
                 }
                 items.clear()
                 imageList.takeIf { it.isNotEmpty() }?.let {
-                    setItems(it)
                     allHitsLoaded = true
+                    searchSuccessEvent.value = it
                 } ?: searchFailEvent.call()
             }
         } catch (e: Exception) {
@@ -87,7 +88,7 @@ class SearchImageListViewModel @Inject constructor(private val imageRepository: 
         }
     }
 
-    private fun setItems(hits: List<ImageEntity>) {
+    fun setItems(hits: List<ImageEntity>) {
         if (pageNumber == 1)
             items.clear()
         items.addAll(hits)

@@ -49,6 +49,13 @@ class SearchImageListFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initScrollListener()
+        initSwipeRefresh()
+    }
+
+    private fun initSwipeRefresh() {
+        swipeToRefresh?.setOnRefreshListener {
+            viewModel.searchString.postValue(viewModel.lastSearchedWord)
+        }
     }
 
     private fun initScrollListener() {
@@ -59,7 +66,7 @@ class SearchImageListFragment :
 
                 override fun isLoading(): Boolean = viewModel.requestInProgress
 
-                override fun loadMoreItems() = viewModel.search(viewModel.searchString.value ?: "")
+                override fun loadMoreItems() = viewModel.search(viewModel.lastSearchedWord ?: "")
 
             })
         }
@@ -76,10 +83,20 @@ class SearchImageListFragment :
             context?.let { context ->
                 DialogFactory.showErrorDialog(context, getString(R.string.no_content_found))
             }
+            swipeToRefresh?.isRefreshing = false
+        })
+
+        viewModel.searchSuccessEvent.observe(this, Observer {
+            viewModel.setItems(it)
+            swipeToRefresh?.isRefreshing = false
         })
 
         viewModel.onItemClickEvent.observe(this, Observer {
-            findNavController().navigate(SearchImageListFragmentDirections.actionSearchImageListFragmentToImageDetailFragment(it))
+            findNavController().navigate(
+                SearchImageListFragmentDirections.actionSearchImageListFragmentToImageDetailFragment(
+                    it
+                )
+            )
         })
     }
 
@@ -88,6 +105,7 @@ class SearchImageListFragment :
         compositeDisposable.clear()
         viewModel.searchString.removeObservers(this)
         viewModel.searchFailEvent.removeObservers(this)
+        viewModel.searchSuccessEvent.removeObservers(this)
         viewModel.onItemClickEvent.removeObservers(this)
     }
 
