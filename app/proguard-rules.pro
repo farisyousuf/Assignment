@@ -65,6 +65,10 @@
 -dontwarn android.support.**
 -keep class android.databinding.**{*;}
 
+#########--------Navigation Component--------#########
+-keep class * extends androidx.fragment.app.Fragment{}
+-keep class com.example.enbdassignment.data.models.entities.ImageEntity
+
 #########--------Android Support Design--------#########
 -dontwarn android.support.design.**
 -keep class android.support.design.** { *; }
